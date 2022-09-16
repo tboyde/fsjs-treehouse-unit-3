@@ -147,52 +147,127 @@ Form Validation:
     This section validates several fields in order for the form to be successfully processed. 
     An event listener looks to detect any errors with the name, email address, credit card info, and checks to 
     see if an event has been selected to properly submit the form. 
-
-
-Requirements: 
-- Name field can’t be blank
-- email address field must contain properly formatted email address (followed by @ + .com domain name)
-- The register for activities section must have one activity selected  
-
-IF and only IF, credit card is the selected payment method, then: 
-- card number field must contain 13 - 16 digits with no dashes
-- zip code must be a 5 digit number 
-- cvv field must contain a 3 digit number 
 */
+
+// the variable for name: nameField
+const emailAddress = document.querySelector('#email'); 
+// the variable for registering for activities is: activityRegister
+const ccNumber = document.querySelector('#cc-num'); 
+const zipCode = document.querySelector('#zip'); 
+const cvvCode = document.querySelector('#cvv')
 const form = document.querySelector('form'); 
+
+// Helper Functions - all fields that are required to be validated 
+const nameValidation= () => {
+    const nameEntered = nameField.value; 
+    const nameIsValid = /^[A-Za-z]+/.test(nameEntered); 
+    return nameIsValid; 
+}
+
+const emailValidation = () => {
+    const emailEntered = emailAddress.value; 
+    const emailIsValid = /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/.test(emailEntered); 
+    return emailIsValid; 
+}
+
+
+const cardValidation = () => {
+    const cardNumber = ccNumber.value; 
+    const cardNumValid = /(^\d{13,16}$)/.test(cardNumber); 
+    return cardNumValid; 
+}
+
+const zipValidation = () => {
+    const zip = zipCode.value; 
+    const zipIsValid = /(^\d{5}$)/.test(zip); 
+    return zipIsValid; 
+}
+
+const cvvValidation = () => {
+    const cvv = cvvCode.value; 
+    const cvvIsValid = /(^\d{3}$)/.test(cvv); 
+    return cvvIsValid; 
+
+}
 
 //event listener for detecting changes once 'submit' button is pressed on the form
 form.addEventListener('submit', (e) => {
-    // variables that will be referenced within this listener
-    const nameEntered = nameField.value; 
-    const nameRegex = /^[A-Za-z]+/; 
 
-    const emailAddress = document.querySelector('#email').value;
-    const emailRegex = /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/; 
-
-    const ccNumber = document.querySelector('.cc-num').value;
-    const ccRegex = /(^\d{13,16}$)/; 
-
-    const zipCode = document.querySelector('#zip').value;
-    const zipRegex = /(^\d{5}$)/; 
-    console.log(zipCode); 
-
-
-    const cvvCode = document.querySelector('#cvv').value;
-    const cvvRegex = /(^\d{3}$)/;
-
-    // function for testing validation with regex
-
-    if (nameRegex.test(nameEntered)){
-        e.preventDefault(); 
+    //function for checking validation in text-based fields
+    function checkValidation(method){
+        if (!method){
+            e.preventDefault(); 
+        }
     }
+
+    //checking all fields supplied for form
+    checkValidation(nameValidation()); 
+    checkValidation(emailValidation()); 
+
+    //function for checking if activity (checkbox) was selected for activities req for form submission
+    function valEvent(){
+        var checkBoxes = document.querySelectorAll('input[type="checkbox"]'); 
+        var numChecked = 0; 
+        for (let i = 0; i < checkBoxes.length; i++ ){
+            if (checkBoxes[i].checked){
+                numChecked += 1; 
+            } 
+        }
+        if (numChecked < 1 ){
+            e.preventDefault(); 
+        }
+    }
+    //checking to see if at least one event was selected 
+    valEvent(); 
+
+    //function used to check all the fields related to the credit card information 
+    function valCard(){
+        const properPayment = paymentMethod[1];  
+        if (properPayment.selected){
+            checkValidation(cardValidation()); 
+            checkValidation(zipValidation()); 
+            checkValidation(cvvValidation()); 
+       } 
+    }
+    valCard(); 
 }); 
-
-
 
 /*
 Accessbility: 
+        - Make the focus states of the activities more obvious to all users. 
+        - Make the form validation errors obvious to all users. 
+
+        In this section, you must: 
+        First Part: (Make focus states obvious to users)
+        - make checkbox input listen for the focus and blur events
+        - when focus event is detected, add .focus to checkbox input’s element from label
+        - when blur is detected, remove the .focus class name from label
+
+        Second Part: (Make the form validation errors obvious to all users)
+        - add the .not-valid className to the parent element of the form field or section
+        - remove the .valid className from the parent element of form or field section 
+        - display the .hint element associated with the form field or section. (parentElement and lastElementChild are helpful here). 
+
+        Second Part - A: (if a required form field/section is valid) 
+        - Add the .valid className to parent element of the form field or section
 */
+const checkBoxes = document.querySelectorAll('input[type="checkbox"]'); 
+
+for (let i = 0; i < checkBoxes.length; i++){
+    checkBoxes[i].addEventListener('focus',(e) => {
+        selectedActivity = e.target; 
+        selectedActivity.parentElement.classList.add('focus'); 
+        console.log("The class was added: ", selectedActivity.parentElement.classList); 
+    }); 
+    
+    checkBoxes[i].addEventListener('blur', (e) => { 
+        selectedActivity = e.target; 
+        selectedActivity.parentElement.classList.remove('focus'); 
+        console.log("The class was removed", selectedActivity.parentElement.classList); 
+
+    }); 
+}
+
 
 /*
 References: 
@@ -200,8 +275,11 @@ References:
     Andrew Woods, 19 Sept. 2018, https://andrewwoods.net/blog/2018/name-validation-regex/. 
 
     2. Landup, David. “Validate Email Addresses with Regular Expressions in JavaScript.” Stack Abuse, Stack Abuse, 17 Oct. 2021,
-     https://stackabuse.com/validate-email-addresses-with-regular-expressions-in-javascript/. 
+    https://stackabuse.com/validate-email-addresses-with-regular-expressions-in-javascript/.
  
-    3. 
+    3. Stack Overflow: https://stackoverflow.com/questions/22238368/how-can-i-require-at-least-one-checkbox-be-checked-before-a-form-can-be-submitte
+
+    4. 
+
 
     */
