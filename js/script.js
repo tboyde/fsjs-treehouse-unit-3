@@ -157,16 +157,43 @@ const zipCode = document.querySelector('#zip');
 const cvvCode = document.querySelector('#cvv')
 const form = document.querySelector('form'); 
 
+// Accessbility Helper Functions, Valid or not valid 
+const isValid = (element) => {
+    element.parentElement.classList.add('valid'); 
+    element.parentElement.classList.remove('not-valid'); 
+    element.parentElement.lastElementChild.hidden = false; 
+}
+
+const notValid = (element) => {
+    element.parentElement.classList.add('valid'); 
+    element.parentElement.classList.remove('not-valid'); 
+    element.parentElement.lastElementChild.hidden = true; 
+}
+
 // Helper Functions - all fields that are required to be validated 
 const nameValidation= () => {
     const nameEntered = nameField.value; 
     const nameIsValid = /^[A-Za-z]+/.test(nameEntered); 
+
+    if (nameIsValid){
+        isValid(nameEntered); 
+    } else {
+        notValid(nameEntered); 
+    }
+
     return nameIsValid; 
 }
 
 const emailValidation = () => {
     const emailEntered = emailAddress.value; 
     const emailIsValid = /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/.test(emailEntered); 
+
+    if (emailIsValid){
+        isValid(emailEntered)
+    } else {
+        notValid(emailEntered); 
+    }
+
     return emailIsValid; 
 }
 
@@ -174,20 +201,40 @@ const emailValidation = () => {
 const cardValidation = () => {
     const cardNumber = ccNumber.value; 
     const cardNumValid = /(^\d{13,16}$)/.test(cardNumber); 
+
+    if (cardNumValid){
+        isValid(cardNumber); 
+    } else {
+        notValid(cardNumber); 
+    }
+
     return cardNumValid; 
 }
 
 const zipValidation = () => {
     const zip = zipCode.value; 
     const zipIsValid = /(^\d{5}$)/.test(zip); 
+
+    if (zipIsValid){
+        isValid(zip); 
+    } else {
+        notValid(zip); 
+    }
+
     return zipIsValid; 
 }
 
 const cvvValidation = () => {
     const cvv = cvvCode.value; 
     const cvvIsValid = /(^\d{3}$)/.test(cvv); 
-    return cvvIsValid; 
+    
+    if (cvvIsValid){
+        isValid(cvv); 
+    } else {
+        notValid(cvv); 
+    }
 
+    return cvvIsValid; 
 }
 
 //event listener for detecting changes once 'submit' button is pressed on the form
@@ -215,6 +262,9 @@ form.addEventListener('submit', (e) => {
         }
         if (numChecked < 1 ){
             e.preventDefault(); 
+            notValid(checkBoxes); 
+        } else {
+            isValid(checkBoxes); 
         }
     }
     //checking to see if at least one event was selected 
@@ -253,17 +303,23 @@ Accessbility:
 */
 const checkBoxes = document.querySelectorAll('input[type="checkbox"]'); 
 
+//Making focus states more obvious to all users 
 for (let i = 0; i < checkBoxes.length; i++){
     checkBoxes[i].addEventListener('focus',(e) => {
         const elementParent = e.target.parentElement; 
         elementParent.classList.add('focus'); 
+        console.log(elementParent.classList); 
     }); 
     
     checkBoxes[i].addEventListener('blur', (e) => { 
-        const elementParent = e.target.parentElement; 
-        elementParent.classList.remove('focus');  
+        const focusedElement = document.querySelector('.focus'); 
+        if (focusedElement){
+        focusedElement.classList.remove('focus');  
+        }
     }); 
 }
+
+
 
 
 /*
@@ -275,8 +331,5 @@ References:
     https://stackabuse.com/validate-email-addresses-with-regular-expressions-in-javascript/.
  
     3. Stack Overflow: https://stackoverflow.com/questions/22238368/how-can-i-require-at-least-one-checkbox-be-checked-before-a-form-can-be-submitte
-
-    4. 
-
 
     */
