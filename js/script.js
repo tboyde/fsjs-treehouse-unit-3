@@ -255,16 +255,13 @@ const checkBoxes = document.querySelectorAll('input[type="checkbox"]');
 
 for (let i = 0; i < checkBoxes.length; i++){
     checkBoxes[i].addEventListener('focus',(e) => {
-        selectedActivity = e.target; 
-        selectedActivity.parentElement.classList.add('focus'); 
-        console.log("The class was added: ", selectedActivity.parentElement.classList); 
+        const elementParent = e.target.parentElement; 
+        elementParent.classList.add('focus'); 
     }); 
     
     checkBoxes[i].addEventListener('blur', (e) => { 
-        selectedActivity = e.target; 
-        selectedActivity.parentElement.classList.remove('focus'); 
-        console.log("The class was removed", selectedActivity.parentElement.classList); 
-
+        const elementParent = e.target.parentElement; 
+        elementParent.classList.remove('focus');  
     }); 
 }
 
