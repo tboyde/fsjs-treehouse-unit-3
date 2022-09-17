@@ -67,6 +67,7 @@ Registration For Activities:
 const activityRegister = document.querySelector('.activities'); 
 const updateCost = document.querySelector('.activities-cost'); 
 let totalCost = 0; 
+let boxesChecked = 0; 
 
 //event listener for detecting changes in Register For Activities section
 activityRegister.addEventListener('change', (e) => {
@@ -74,8 +75,10 @@ activityRegister.addEventListener('change', (e) => {
 
         if(e.target.checked){ 
             totalCost += activityCost; 
+            boxesChecked +=1; 
         } else {
             totalCost -= activityCost; 
+            boxesChecked -= 1; 
         }
         updateCost.innerHTML = 
         `<span>Total: $${totalCost}</span>
@@ -158,88 +161,159 @@ const cvvCode = document.querySelector('#cvv')
 const form = document.querySelector('form'); 
 
 // Accessbility Helper Functions, Valid or not valid 
-const isValid = (element) => {
-    element.parentElement.classList.add('valid'); 
-    element.parentElement.classList.remove('not-valid'); 
-    element.parentElement.lastElementChild.hidden = false; 
-}
+// function isValid(element){
+//     const parent = element.parentElement; 
+//     const hint = parent.lastElementChild; 
+//     parent.classList.add('valid'); 
+//     parent.classList.remove('not-valid'); 
+//     hint.hidden = true; 
+// }
 
-const notValid = (element) => {
-    element.parentElement.classList.add('valid'); 
-    element.parentElement.classList.remove('not-valid'); 
-    element.parentElement.lastElementChild.hidden = true; 
-}
+// function notValid(element){
+//     const parent = element.parentElement; 
+//     const hint = parent.lastElementChild; 
+//     parent.classList.add('not-valid'); 
+//     parent.classList.remove('valid'); 
+//     hint.hidden = false; 
+// }
+
+// function checkValidity(checker, element){
+//     if (!checker){
+//         notValid(element); 
+//     } else {
+//         isValid(element); 
+//     }
+// }
 
 // Helper Functions - all fields that are required to be validated 
-const nameValidation= () => {
-    const nameEntered = nameField.value; 
-    const nameIsValid = /^[A-Za-z]+/.test(nameEntered); 
-
-    if (nameIsValid){
-        isValid(nameEntered); 
-    } else {
-        notValid(nameEntered); 
-    }
-
+const nameValidation = () => {
+    const nameEntered = nameField.value;  
+    const nameIsValid = /^[\w]+$/.test(nameEntered); 
     return nameIsValid; 
 }
 
 const emailValidation = () => {
-    const emailEntered = emailAddress.value; 
-    const emailIsValid = /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/.test(emailEntered); 
-
-    if (emailIsValid){
-        isValid(emailEntered)
-    } else {
-        notValid(emailEntered); 
-    }
-
+    const emailEntered = emailAddress.value;
+    const emailIsValid = /^([a-zA-Z\d.\.-]+)@([a-zA-Z\d-]+)\.([a-z]{2,3})$/.test(emailEntered); 
     return emailIsValid; 
 }
 
-
 const cardValidation = () => {
-    const cardNumber = ccNumber.value; 
+    const cardNumber = ccNumber.value;
     const cardNumValid = /(^\d{13,16}$)/.test(cardNumber); 
-
-    if (cardNumValid){
-        isValid(cardNumber); 
-    } else {
-        notValid(cardNumber); 
-    }
-
     return cardNumValid; 
 }
 
 const zipValidation = () => {
     const zip = zipCode.value; 
     const zipIsValid = /(^\d{5}$)/.test(zip); 
-
-    if (zipIsValid){
-        isValid(zip); 
-    } else {
-        notValid(zip); 
-    }
-
     return zipIsValid; 
 }
 
 const cvvValidation = () => {
-    const cvv = cvvCode.value; 
-    const cvvIsValid = /(^\d{3}$)/.test(cvv); 
-    
-    if (cvvIsValid){
-        isValid(cvv); 
-    } else {
-        notValid(cvv); 
-    }
-
+    const cvvEntry = cvvCode.value; 
+    const cvvIsValid = /(^\d{3}$)/.test(cvvEntry); 
     return cvvIsValid; 
+}
+
+// functions for determining if error message needs to be added to fields
+function nameErrorShows(method){
+    if (method){
+        let parent = nameField.parentElement; 
+        let hint = parent.lastElementChild; 
+        parent.classList.add('valid'); 
+        parent.classList.remove('not-valid'); 
+        hint.style.display = 'none'; 
+    } else if (!method) {
+        let parent = nameField.parentElement; 
+        let hint = parent.lastElementChild; 
+        parent.classList.add('not-valid'); 
+        parent.classList.remove('valid'); 
+        hint.style.display = 'block'; 
+    }
+}
+
+function emailErrorShows(method){
+    if (method){
+        let parent = emailAddress.parentElement; 
+        let hint = parent.lastElementChild; 
+        parent.classList.add('valid'); 
+        parent.classList.remove('not-valid'); 
+        hint.style.display = 'none'; 
+    } else if (!method) {
+        let parent = emailAddress.parentElement; 
+        let hint = parent.lastElementChild; 
+        parent.classList.add('not-valid'); 
+        parent.classList.remove('valid'); 
+        hint.style.display = 'block'; 
+    }
+}
+
+function cardErrorShows(method){
+    if (method){
+        let parent = ccNumber.parentElement; 
+        let hint = parent.lastElementChild; 
+        parent.classList.add('valid'); 
+        parent.classList.remove('not-valid'); 
+        hint.style.display = 'none'; 
+    } else if (!method) {
+        let parent = ccNumber.parentElement; 
+        let hint = parent.lastElementChild; 
+        parent.classList.add('not-valid'); 
+        parent.classList.remove('valid'); 
+        hint.style.display = 'block'; 
+    }
+}
+
+function zipErrorShows(method){
+    if (method){
+        let parent = zipCode.parentElement; 
+        let hint = parent.lastElementChild; 
+        parent.classList.add('valid'); 
+        parent.classList.remove('not-valid'); 
+        hint.style.display = 'none'; 
+
+    } else if (!method) {
+        let parent = zipCode.parentElement; 
+        let hint = parent.lastElementChild; 
+        parent.classList.add('not-valid'); 
+        parent.classList.remove('valid'); 
+        hint.style.display = 'block'; 
+    }
+}
+
+function cvvErrorShows(method){
+    if (method){
+        let parent = cvvCode.parentElement; 
+        let hint = parent.lastElementChild; 
+        parent.classList.add('valid'); 
+        parent.classList.remove('not-valid'); 
+        hint.style.display = 'none'
+
+    } else if (!method) {
+        let parent = cvvCode.parentElement; 
+        let hint = parent.lastElementChild; 
+        parent.classList.add('not-valid'); 
+        parent.classList.remove('valid'); 
+        hint.style.display = 'block'; 
+    }
+}
+
+function activityErrorShows(){
+    if (boxesChecked >= 1){
+        activityRegister.classList.add('valid');  
+        activityRegister.classList.remove('not-valid'); 
+        activityRegister.lastElementChild.style.display = 'none'; 
+        } else if (boxesChecked < 1){
+        activityRegister.classList.add('not-valid');  
+        activityRegister.classList.remove('valid'); 
+        activityRegister.lastElementChild.style.display = 'block'; 
+        }
+
 }
 
 //event listener for detecting changes once 'submit' button is pressed on the form
 form.addEventListener('submit', (e) => {
-
     //function for checking validation in text-based fields
     function checkValidation(method){
         if (!method){
@@ -251,24 +325,26 @@ form.addEventListener('submit', (e) => {
     checkValidation(nameValidation()); 
     checkValidation(emailValidation()); 
 
+    //checking to see if error message needs to be displayed 
+    nameErrorShows(nameValidation()); 
+    emailErrorShows(emailValidation()); 
+
     //function for checking if activity (checkbox) was selected for activities req for form submission
+    let numChecked = 0; 
+
     function valEvent(){
         var checkBoxes = document.querySelectorAll('input[type="checkbox"]'); 
-        var numChecked = 0; 
+        var divMessage = document.querySelector('.activities-hint'); 
+
         for (let i = 0; i < checkBoxes.length; i++ ){
             if (checkBoxes[i].checked){
                 numChecked += 1; 
             } 
+            }
         }
-        if (numChecked < 1 ){
-            e.preventDefault(); 
-            notValid(checkBoxes); 
-        } else {
-            isValid(checkBoxes); 
-        }
-    }
-    //checking to see if at least one event was selected 
+    //checking to see if at least one event was selected & if errors were detected
     valEvent(); 
+    activityErrorShows(); 
 
     //function used to check all the fields related to the credit card information 
     function valCard(){
@@ -277,6 +353,10 @@ form.addEventListener('submit', (e) => {
             checkValidation(cardValidation()); 
             checkValidation(zipValidation()); 
             checkValidation(cvvValidation()); 
+            //add error messages if needed 
+            cardErrorShows(cardValidation()); 
+            zipErrorShows(zipValidation()); 
+            cvvErrorShows(cvvValidation()); 
        } 
     }
     valCard(); 
@@ -308,7 +388,6 @@ for (let i = 0; i < checkBoxes.length; i++){
     checkBoxes[i].addEventListener('focus',(e) => {
         const elementParent = e.target.parentElement; 
         elementParent.classList.add('focus'); 
-        console.log(elementParent.classList); 
     }); 
     
     checkBoxes[i].addEventListener('blur', (e) => { 
@@ -318,9 +397,6 @@ for (let i = 0; i < checkBoxes.length; i++){
         }
     }); 
 }
-
-
-
 
 /*
 References: 
