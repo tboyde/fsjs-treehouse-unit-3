@@ -1,4 +1,3 @@
-
 //When page loads, the first form input is selected and is focused on
 const nameField = document.getElementById('name'); 
 nameField.focus(); 
@@ -95,10 +94,10 @@ const paymentMethod = document.querySelector('#payment');
 paymentMethod[1].setAttribute('selected', true); 
 
 const payPal = document.querySelector('.paypal'); 
-payPal.style.visibility = 'hidden'; 
+payPal.style.display = 'none'; 
 
 const bitCoin = document.querySelector('.bitcoin');
-bitCoin.style.visibility = 'hidden'; 
+bitCoin.style.display = 'none'; 
 
 //selecting elements related to the credit card payment field
 const creditCard = document.querySelector('#credit-card');
@@ -106,6 +105,7 @@ const yearBox = document.querySelector('.year-box');
 const creditCardBox = document.querySelector('.credit-card-box');
 const zipBox = document.querySelector('.zip-box');
 const cvv = document.querySelector('.cvv-box');    
+
 
 //event listener for detecting changes in Payment Method 
 paymentMethod.addEventListener('change', (e) => {
@@ -115,32 +115,32 @@ paymentMethod.addEventListener('change', (e) => {
         const selectedMethod = e.target.value; 
 
         if (selectedMethod === preferredMethod[1].value){
-            creditCard.style.visibility = ''; 
-            yearBox.style.visibility = ''; 
-            creditCardBox.style.visibility = ''; 
-            zipBox.style.visibility = ''; 
-            cvv.style.visibility = '';
+            creditCard.style.display = ''; 
+            yearBox.style.display = ''; 
+            creditCardBox.style.display = ''; 
+            zipBox.style.display = ''; 
+            cvv.style.display = '';
             //shows all the credit card related elements and hides the other field related to other payment methods. 
-            payPal.style.visibility = 'hidden'; 
-            bitCoin.style.visibility = 'hidden'; 
+            payPal.style.display = 'none'; 
+            bitCoin.style.display = 'none'; 
         } else if (selectedMethod === preferredMethod[2].value){
-            payPal.style.visibility = ''; 
+            payPal.style.display = 'block'; 
             // shows paypal related payment info, hides other payment options
-            bitCoin.style.visibility = 'hidden'; 
-            creditCard.style.visibility = 'hidden'; 
-            yearBox.style.visibility = 'hidden'; 
-            creditCardBox.style.visibility = 'hidden'; 
-            zipBox.style.visibility = 'hidden'; 
-            cvv.style.visibility = 'hidden';
+            bitCoin.style.display = 'none'; 
+            creditCard.style.display = 'none'; 
+            yearBox.style.display = 'none'; 
+            creditCardBox.style.display = 'none'; 
+            zipBox.style.display = 'none'; 
+            cvv.style.display = 'none';
         } else {
-            bitCoin.style.visibility = ''; 
+            bitCoin.style.display = 'block'; 
             // shows bitcoin related payment info, hides other payment options
-            payPal.style.visibility = 'hidden';
-            creditCard.style.visibility = 'hidden'; 
-            yearBox.style.visibility = 'hidden'; 
-            creditCardBox.style.visibility = 'hidden'; 
-            zipBox.style.visibility = 'hidden'; 
-            cvv.style.visibility = 'hidden';
+            payPal.style.display = 'none';
+            creditCard.style.display = 'none'; 
+            yearBox.style.display = 'none'; 
+            creditCardBox.style.display = 'none'; 
+            zipBox.style.display = 'none'; 
+            cvv.style.display = 'none';
         }
     }
 }); 
@@ -155,35 +155,11 @@ Form Validation:
 // the variable for name: nameField
 const emailAddress = document.querySelector('#email'); 
 // the variable for registering for activities is: activityRegister
+const checkBoxes = document.querySelectorAll('input[type="checkbox"]'); 
 const ccNumber = document.querySelector('#cc-num'); 
 const zipCode = document.querySelector('#zip'); 
 const cvvCode = document.querySelector('#cvv')
 const form = document.querySelector('form'); 
-
-// Accessbility Helper Functions, Valid or not valid 
-// function isValid(element){
-//     const parent = element.parentElement; 
-//     const hint = parent.lastElementChild; 
-//     parent.classList.add('valid'); 
-//     parent.classList.remove('not-valid'); 
-//     hint.hidden = true; 
-// }
-
-// function notValid(element){
-//     const parent = element.parentElement; 
-//     const hint = parent.lastElementChild; 
-//     parent.classList.add('not-valid'); 
-//     parent.classList.remove('valid'); 
-//     hint.hidden = false; 
-// }
-
-// function checkValidity(checker, element){
-//     if (!checker){
-//         notValid(element); 
-//     } else {
-//         isValid(element); 
-//     }
-// }
 
 // Helper Functions - all fields that are required to be validated 
 const nameValidation = () => {
@@ -216,7 +192,8 @@ const cvvValidation = () => {
     return cvvIsValid; 
 }
 
-// functions for determining if error message needs to be added to fields
+// Additonal helper functions for determining if error message needs to be added to fields
+
 function nameErrorShows(method){
     if (method){
         let parent = nameField.parentElement; 
@@ -299,18 +276,24 @@ function cvvErrorShows(method){
     }
 }
 
-function activityErrorShows(){
-    if (boxesChecked >= 1){
-        activityRegister.classList.add('valid');  
-        activityRegister.classList.remove('not-valid'); 
-        activityRegister.lastElementChild.style.display = 'none'; 
-        } else if (boxesChecked < 1){
-        activityRegister.classList.add('not-valid');  
-        activityRegister.classList.remove('valid'); 
-        activityRegister.lastElementChild.style.display = 'block'; 
-        }
 
-}
+activityRegister.addEventListener('change', (e)=>{
+    for (let i = 0; i < checkBoxes.length; i++){
+        const selectedBox = e.target; 
+        const label = selectedBox.parentElement; 
+        if (boxesChecked >=1){
+            activityRegister.firstElementChild.classList.add('valid'); 
+            activityRegister.firstElementChild.classList.remove('not-valid'); 
+            activityRegister.lastElementChild.style.display = 'none'; 
+        } else if (boxesChecked < 1){
+            activityRegister.firstElementChild.classList.add('not-valid'); 
+            activityRegister.firstElementChild.classList.remove('valid'); 
+            activityRegister.lastElementChild.style.display = 'block'; 
+        }
+    }
+}); 
+
+
 
 //event listener for detecting changes once 'submit' button is pressed on the form
 form.addEventListener('submit', (e) => {
@@ -343,7 +326,23 @@ form.addEventListener('submit', (e) => {
         }
     //checking to see if at least one event was selected & if errors were detected
     valEvent(); 
-    activityErrorShows(); 
+
+    //event listener for changes in the state the boxes selected 
+    activityRegister.addEventListener('change', (e)=>{
+        for (let i = 0; i < checkBoxes.length; i++){
+            const selectedBox = e.target; 
+            const label = selectedBox.parentElement; 
+            if (boxesChecked >=1){
+                activityRegister.firstElementChild.classList.add('valid'); 
+                activityRegister.firstElementChild.classList.remove('not-valid'); 
+                activityRegister.lastElementChild.style.display = 'none'; 
+            } else if (boxesChecked< 1){
+                activityRegister.firstElementChild.classList.add('not-valid'); 
+                activityRegister.firstElementChild.classList.remove('valid'); 
+                activityRegister.lastElementChild.style.display = 'block'; 
+            }
+        }
+}); 
 
     //function used to check all the fields related to the credit card information 
     function valCard(){
@@ -365,8 +364,7 @@ form.addEventListener('submit', (e) => {
 Accessbility: 
     Within this section, the focus states of the activities are made to appear to be more obvious to users and
     the form validation errors now appear (please see section underneath helper functions). 
-*/
-const checkBoxes = document.querySelectorAll('input[type="checkbox"]'); 
+*/ 
 
 //Making focus states more obvious to all users 
 for (let i = 0; i < checkBoxes.length; i++){
