@@ -333,8 +333,7 @@ form.addEventListener('submit', (e) => {
     let numChecked = 0; 
 
     function valEvent(){
-        var checkBoxes = document.querySelectorAll('input[type="checkbox"]'); 
-        var divMessage = document.querySelector('.activities-hint'); 
+        var checkBoxes = document.querySelectorAll('input[type="checkbox"]');  
 
         for (let i = 0; i < checkBoxes.length; i++ ){
             if (checkBoxes[i].checked){
@@ -364,22 +363,8 @@ form.addEventListener('submit', (e) => {
 
 /*
 Accessbility: 
-        - Make the focus states of the activities more obvious to all users. 
-        - Make the form validation errors obvious to all users. 
-
-        In this section, you must: 
-        First Part: (Make focus states obvious to users)
-        - make checkbox input listen for the focus and blur events
-        - when focus event is detected, add .focus to checkbox input’s element from label
-        - when blur is detected, remove the .focus class name from label
-
-        Second Part: (Make the form validation errors obvious to all users)
-        - add the .not-valid className to the parent element of the form field or section
-        - remove the .valid className from the parent element of form or field section 
-        - display the .hint element associated with the form field or section. (parentElement and lastElementChild are helpful here). 
-
-        Second Part - A: (if a required form field/section is valid) 
-        - Add the .valid className to parent element of the form field or section
+    Within this section, the focus states of the activities are made to appear to be more obvious to users and
+    the form validation errors now appear (please see section underneath helper functions). 
 */
 const checkBoxes = document.querySelectorAll('input[type="checkbox"]'); 
 
@@ -407,5 +392,4 @@ References:
     https://stackabuse.com/validate-email-addresses-with-regular-expressions-in-javascript/.
  
     3. Stack Overflow: https://stackoverflow.com/questions/22238368/how-can-i-require-at-least-one-checkbox-be-checked-before-a-form-can-be-submitte
-
     */
